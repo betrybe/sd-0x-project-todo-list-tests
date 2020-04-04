@@ -69,6 +69,11 @@
         "description": "Como sua lista é ordenada, o que acontece se você esquecer de um item? Você teria que apagar a lista e começar tudo de novo, pois só é possível inserir um item no final, certo? Adicione dois botões, um com `id=\"mover-cima\"` e outro com `id=\"mover-baixo\"`, que permitam mover o item selecionado para cima ou para baixo na lista de tarefas",
         "enabled": true,
         "bonus": true
+      },
+      {
+        "description": "Adicione um botão com `id=\"remover-selecionado\"` que, quando clicado, remove o item selecionado",
+        "enabled": true,
+        "bonus": true
       }
     ]
   }
