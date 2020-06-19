@@ -17,10 +17,9 @@ const addTodo = (todo) => {
   cy.get(TODO_ADD_BUTTON_SELECTOR).click();
 };
 
-const addTodos = (todos = []) => (todos.map(addTodo));
+const addTodos = (todos = []) => todos.map(addTodo);
 
 const checkTodoList = (todos = []) => {
-
   if (todos.length === 0) {
     cy.get(TODO_LIST_LINE_SELECTOR).should('not.exist');
   } else {
@@ -34,6 +33,7 @@ const checkTodoList = (todos = []) => {
 
 describe('Todo list project', () => {
   beforeEach(() => {
+    cy.viewport(1366, 768);
     cy.visit('./index.html');
   });
 
@@ -57,11 +57,11 @@ describe('Todo list project', () => {
     cy.get(TODO_ADD_BUTTON_SELECTOR).should('exist');
 
     const todo1 = {
-      content: 'minha primeira tarefa'
+      content: 'minha primeira tarefa',
     };
 
     const todo2 = {
-      content: 'minha segunda tarefa'
+      content: 'minha segunda tarefa',
     };
 
     addTodo(todo1);
@@ -75,15 +75,15 @@ describe('Todo list project', () => {
 
   it('Os itens da lista de tarefas devem ser ordenados por ordem de criação', () => {
     const todo1 = {
-      content: 'minha tarefa'
+      content: 'minha tarefa',
     };
 
     const todo2 = {
-      content: 'minha outra tarefa'
+      content: 'minha outra tarefa',
     };
 
     const todo3 = {
-      content: 'minha terceira tarefa'
+      content: 'minha terceira tarefa',
     };
 
     addTodo(todo1);
@@ -96,60 +96,113 @@ describe('Todo list project', () => {
     checkTodoList([todo1, todo2, todo3]);
   });
 
-  it('Ao passar o mouse sobre qualquer botão o ícone do mouse deve mudar para uma mãozinha', () => {
-    const todos = [{
-      content: 'tarefinha facin de fazer'
-    }, {
-      content: 'tarefa mais hard'
-    }];
+  it('Ao clicar em um item da lista, altere a cor de fundo do item para cinza rgb(128,128,128)', () => {
+    const todos = [
+      {
+        content: 'uma tarefa qualquer',
+      },
+      {
+        content: 'uma outra tarefa atoa',
+      },
+    ];
 
     addTodos(todos);
     checkTodoList(todos);
 
-    cy.get(TODO_LIST_LINE_SELECTOR).first().trigger('hover').then(($li) => {
-      expect($li).to.have.css('cursor', 'pointer');
-    });
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .should('not.have.css', 'background-color', 'rgb(128, 128, 128)');
+
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .click()
+      .then(($li) => {
+        expect($li).to.have.css('background-color', 'rgb(128, 128, 128)');
+      });
   });
 
-  it('Ao clicar em um item da lista, altere a cor de fundo do item para cinza rgb(128,128,128)', () => {
-    const todos = [{
-      content: 'uma tarefa qualquer'
-    }, {
-      content: 'uma outra tarefa atoa'
-    }];
+  it('Não deve ser possível selecionar mais de um elemento da lista ao mesmo tempo.', () => {
+    const todos = [
+      {
+        content: 'uma tarefa qualquer',
+      },
+      {
+        content: 'uma outra tarefa atoa',
+      },
+    ];
 
     addTodos(todos);
     checkTodoList(todos);
 
-    cy.get(TODO_LIST_LINE_SELECTOR).first().click().then(($li) => {
-      expect($li).to.have.css('background-color', 'rgb(128, 128, 128)');
-    });
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .should('not.have.css', 'background-color', 'rgb(128, 128, 128)');
+
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .click()
+      .then(($li) => {
+        expect($li).to.have.css('background-color', 'rgb(128, 128, 128)');
+      });
+
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .last()
+      .click()
+      .then(($li) => {
+        expect($li).to.have.css('background-color', 'rgb(128, 128, 128)');
+      });
+
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .should('not.have.css', 'background-color', 'rgb(128, 128, 128)');
   });
 
   it('Ao clicar duas vezes em um item, ele deverá ser riscado e clicando duas vezes novamente, a ação deve ser desfeita', () => {
-    const todos = [{
-      content: 'já terminei essa tarefa'
-    }, {
-      content: 'está eu ainda não terminei'
-    }];
+    const todos = [
+      {
+        content: 'já terminei essa tarefa',
+      },
+      {
+        content: 'está eu ainda não terminei',
+      },
+    ];
 
     addTodos(todos);
     checkTodoList(todos);
 
-    cy.get(TODO_LIST_LINE_SELECTOR).first().dblclick();
-    cy.get(TODO_LIST_LINE_SELECTOR).first().should('have.class', 'completed');
-    cy.get('.completed').should('have.css', 'text-decoration', 'line-through solid rgb(0, 0, 0)')
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .dblclick();
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .should('have.class', 'completed');
+    cy.get('.completed').should(
+      'have.css',
+      'text-decoration',
+      'line-through solid rgb(0, 0, 0)',
+    );
 
-    cy.get(TODO_LIST_LINE_SELECTOR).first().dblclick();
-    cy.get(TODO_LIST_LINE_SELECTOR).first().should('not.have.class', 'completed');
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .dblclick();
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .should('not.have.class', 'completed');
+
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .should('not.have.css', 'text-decoration', 'line-through solid rgb(0, 0, 0)');
   });
 
   it('Deve haver um botão com `id="apaga-tudo"`que quando clicado deve apagar todos os items da lista', () => {
-    const todos = [{
-      content: 'blablabla'
-    }, {
-      content: 'hahahahaha'
-    }];
+    const todos = [
+      {
+        content: 'blablabla',
+      },
+      {
+        content: 'hahahahaha',
+      },
+    ];
 
     addTodos(todos);
     checkTodoList(todos);
@@ -160,15 +213,15 @@ describe('Todo list project', () => {
 
   it('Deve haver um botão`id="remover-finalizados"`que quando clicado remove **somente** os elementos finalizados da sua lista', () => {
     const todo1 = {
-      content: 'vou terminar essa tarefa logo'
+      content: 'vou terminar essa tarefa logo',
     };
 
     const todo2 = {
-      content: 'essa tarefa eu vou demorar para finalizar'
+      content: 'essa tarefa eu vou demorar para finalizar',
     };
 
     const todo3 = {
-      content: 'essa tarefa tbm vai demorar...'
+      content: 'essa tarefa tbm vai demorar...',
     };
 
     const todos = [todo1, todo2, todo3];
@@ -185,31 +238,33 @@ describe('Todo list project', () => {
 
   it('Adicione um botão com `id=salvar-tarefas` que salve o conteúdo da lista', () => {
     const todo1 = {
-      content: 'primeira tarefa a ser salva'
+      content: 'primeira tarefa a ser salva',
     };
 
     const todo2 = {
-      content: 'esta tarefa será salva também'
+      content: 'esta tarefa será salva também',
     };
 
     const todo3 = {
-      content: 'mais uma para salvar'
+      content: 'mais uma para salvar',
     };
 
     const todos = [todo1, todo2, todo3];
     const newTodosState = [
       {
         ...todo1,
-        done: true
+        done: true,
       },
       todo2,
-      todo3
+      todo3,
     ];
 
     addTodos(todos);
     checkTodoList(todos);
 
-    cy.get(TODO_LIST_LINE_SELECTOR).first().dblclick();
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .first()
+      .dblclick();
     cy.get(TODO_SAVE_LIST_BUTTON_SELECTOR).click();
 
     cy.reload();
@@ -217,19 +272,33 @@ describe('Todo list project', () => {
   });
 
   it('Adicione dois botões, um com `id="mover-cima"` e outro com `id="mover-baixo"`, que permitam mover o item selecionado para cima ou para baixo na lista de tarefas', () => {
-    const todos = [{
-      content: 'primeira tarefa'
-    }, {
-      content: 'segunda tarefa'
-    }, {
-      content: 'terceira tarefa'
-    }, {
-      content: 'quarta tarefa'
-    }];
+    const todos = [
+      {
+        content: 'primeira tarefa',
+        done: true,
+      },
+      {
+        content: 'segunda tarefa',
+      },
+      {
+        content: 'terceira tarefa',
+      },
+      {
+        content: 'quarta tarefa',
+      },
+    ];
 
     const newTodosState = [todos[3], todos[2], todos[1], todos[0]];
 
     addTodos(todos);
+    cy.get(`${TODO_LIST_LINE_SELECTOR}:nth-child(1)`)
+      .click()
+      .dblclick();
+
+    checkTodoList(todos);
+    cy.get(TODO_MOVE_UP_BUTTON_SELECTOR).click();
+    cy.get(TODO_MOVE_DOWN_BUTTON_SELECTOR).click();
+    cy.get(TODO_MOVE_UP_BUTTON_SELECTOR).click();
     checkTodoList(todos);
 
     cy.get(`${TODO_LIST_LINE_SELECTOR}:nth-child(2)`).click();
@@ -251,15 +320,25 @@ describe('Todo list project', () => {
     cy.get(TODO_MOVE_UP_BUTTON_SELECTOR).click();
 
     checkTodoList(newTodosState);
+
+    cy.get(`${TODO_LIST_LINE_SELECTOR}:nth-child(1)`).click();
+    cy.get(TODO_MOVE_UP_BUTTON_SELECTOR).click();
+
+    checkTodoList(newTodosState);
+
+    cy.get(`${TODO_LIST_LINE_SELECTOR}:nth-child(4)`).click();
+    cy.get(TODO_MOVE_DOWN_BUTTON_SELECTOR).click();
+
+    checkTodoList(newTodosState);
   });
 
   it('Adicione um botão com `id="remover-selecionado"` que, quando clicado, remove o item selecionado', () => {
     const todo1 = {
-      content: 'não posso remover essa tarefa'
+      content: 'não posso remover essa tarefa',
     };
 
     const todo2 = {
-      content: 'essa tarefa aqui eu posso remover'
+      content: 'essa tarefa aqui eu posso remover',
     };
 
     const todos = [todo1, todo2];
@@ -267,7 +346,9 @@ describe('Todo list project', () => {
     addTodos(todos);
     checkTodoList(todos);
 
-    cy.get(TODO_LIST_LINE_SELECTOR).last().click();
+    cy.get(TODO_LIST_LINE_SELECTOR)
+      .last()
+      .click();
     cy.get(TODO_REMOVE_SELECTED_BUTTON_SELECTOR).click();
     checkTodoList([todo1]);
   });
