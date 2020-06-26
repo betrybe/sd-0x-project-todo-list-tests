@@ -324,7 +324,7 @@ describe('Todo list evaluation', () => {
     });
   });
 
-  describe('Adicione um botão com `id="salvar-tarefas"` que salve o conteúdo da lista. Se você fechar e reabrir a página, a lista deve continuar no estado em que estava. Dica: Leia sobre _Local Storage_ na seção de recursos adicionais', () => {
+  describe('Adicione um botão com `id="salvar-tarefas"` que salve o conteúdo da lista. Se você fechar e reabrir a página, a lista deve continuar no estado em que estava', () => {
     it('Será verificado que existe um elemento `button` com o id `apaga-tudo`', () => {
       cy.get(TODO_SAVE_LIST_BUTTON_SELECTOR).should('exist');
     });
@@ -487,7 +487,7 @@ describe('Todo list evaluation', () => {
       checkTodoList(newTodos);
 
       cy.get(TODO_MOVE_UP_BUTTON_SELECTOR).click();
-      checkTodoList(todos)
+      checkTodoList(todos);
     });
 
     it('_Caso especial!_ Será verificado que, caso se tente subir o elemento no topo da lista ou, caso se tente descer o último elemento da lista, esta não deve ser alterada', () => {
