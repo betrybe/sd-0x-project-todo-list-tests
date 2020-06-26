@@ -160,7 +160,7 @@ describe('Todo list evaluation', () => {
     });
   });
 
-  describe('Não deve ser possível selecionar mais de um elemento da lista ao mesmo tempo.', () => {
+  describe('Não deve ser possível selecionar mais de um elemento da lista ao mesmo tempo', () => {
     it('Será verificado que, quando um elemento da lista é selecionado, o elemento selecionado previamente deixa de sê-lo. Isso é verificado através da presença ou não do estilo `background-color: rgb(128, 128, 128)` no elemento', () => {
       const todos = [
         {
@@ -198,7 +198,7 @@ describe('Todo list evaluation', () => {
     });
   });
 
-  describe('Ao clicar duas vezes em um item, ele deverá ser riscado e clicando duas vezes novamente, a ação deve ser desfeita', () => {
+  describe('Ao clicar duas vezes em um item, ele deverá ser riscado, indicando que foi completo. Deve ser possível desfazer essa ação clicando novamente duas vezes no item', () => {
     it('Será verificado que, antes da ação ser disparada, o elemento adicionado à lista não tem nem a classe `completed` nem o estilo `line-through solid rgb(0, 0, 0)`', () => {
       const todos = [
         {
