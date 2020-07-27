@@ -37,13 +37,13 @@ describe('Todo list evaluation', () => {
     cy.visit('./index.html');
   });
 
-  describe('Sua lista deve possuir o título “Minha Lista de Tarefas” em uma tag <header>', () => {
+  describe('Sua lista deve possuir o título "Minha Lista de Tarefas" em uma tag <header>', () => {
     it('Será verificado se sua página possui uma tag `header` com o conteúdo `Minha Lista de Tarefas`', () => {
       cy.get('header').contains(TODO_PAGE_TITLE);
     });
   });
 
-  describe('Abaixo do título deve haver um pequeno e discreto parágrafo com id="funcionamento" e com o texto “Clique duas vezes em um item para marcá-lo como completo”', () => {
+  describe('Abaixo do título deve haver um pequeno e discreto parágrafo com id="funcionamento" e com o texto "Clique duas vezes em um item para marcá-lo como completo"', () => {
     it('Será verificado que existe na sua página um elemento com o id `funcionamento` com o conteúdo `Clique duas vezes em um item para marcá-lo como completo`', () => {
       cy.get(TODO_PAGE_DESCRIPTION_SELECTOR).contains(TODO_PAGE_DESCRIPTION);
     });
