@@ -325,7 +325,7 @@ describe('Todo list evaluation', () => {
   });
 
   describe('Adicione um botão com `id="salvar-tarefas"` que salve o conteúdo da lista. Se você fechar e reabrir a página, a lista deve continuar no estado em que estava', () => {
-    it('Será verificado que existe um elemento `button` com o id `apaga-tudo`', () => {
+    it('Será verificado que existe um elemento `button` com o id `salvar-tarefas`', () => {
       cy.get(TODO_SAVE_LIST_BUTTON_SELECTOR).should('exist');
     });
 
